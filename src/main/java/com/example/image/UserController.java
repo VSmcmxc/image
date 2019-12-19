@@ -6,6 +6,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,8 +37,19 @@ public class UserController {
     }
 
     public File getAnonymousUserAvatar() throws IOException {
+        return getFileFromResources("anonymous.jpg");
+    }
+
+    private File getFileFromResources(String fileName) {
+
         ClassLoader classLoader = getClass().getClassLoader();
 
-        return resourceloader.getResource("anonymous.jpg").getFile();
+        URL resource = classLoader.getResource(fileName);
+        if (resource == null) {
+            throw new IllegalArgumentException("file is not found!");
+        } else {
+            return new File(resource.getFile());
+        }
+
     }
 }
