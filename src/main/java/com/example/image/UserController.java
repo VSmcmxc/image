@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.support.ServletContextResource;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,21 +32,28 @@ public class UserController {
     @Autowired
     ResourceLoader resourceLoader;
 
+    @Value("classpath:anonymous.jpg")
+    private Resource resource;
 
 
-
-    @GetMapping("/image")
+    @GetMapping("/")
     public ResponseEntity<byte[]> getCurrentAvatar() throws IOException {
 
+/*
         Resource resource = resourceLoader.getResource("classpath:anonymous.jpg");
+        InputStream is = resource.getInputStream();
 
-        InputStream input = resource.getInputStream();
+        byte[] result = IOUtils.toByteArray(is);
 
-        File avatar = resource.getFile();
+        //File avatar = resource.getFile();
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.parseMediaType("image/jpg"))
                 .contentLength(avatar.length())
-                .body(Files.readAllBytes(avatar.toPath()));
+                .body(Files.readAllBytes(avatar.toPath()));*/
+        InputStream in = resource.getInputStream();
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.parseMediaType("image/jpg"))
+                .body(IOUtils.toByteArray(in));
     }
 
 
