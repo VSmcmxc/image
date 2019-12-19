@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 
@@ -28,43 +29,24 @@ import java.nio.file.Files;
 public class UserController {
 
     @Autowired
-    ResourceLoader resourceloader;
+    ResourceLoader resourceLoader;
 
-
-    public File loadEmployeesWithSpringInternalClass()
-            throws FileNotFoundException {
-        return ResourceUtils.getFile(
-                "classpath:anonymous.jpg");
-    }
 
 
 
     @GetMapping("/image")
     public ResponseEntity<byte[]> getCurrentAvatar() throws IOException {
 
+        Resource resource = resourceLoader.getResource("classpath:anonymous.jpg");
 
-        File avatar = loadEmployeesWithSpringInternalClass();
+        InputStream input = resource.getInputStream();
 
+        File avatar = resource.getFile();
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.parseMediaType("image/jpg"))
                 .contentLength(avatar.length())
                 .body(Files.readAllBytes(avatar.toPath()));
     }
 
-   /* public File getAnonymousUserAvatar() throws IOException {
-        return getFileFromResources("anonymous.jpg");
-    }
 
-    private File getFileFromResources(String fileName) {
-
-        ClassLoader classLoader = getClass().getClassLoader();
-
-        URL resource = classLoader.getResource(fileName);
-        if (resource == null) {
-            throw new IllegalArgumentException("file is not found!");
-        } else {
-            return new File(resource.getFile());
-        }
-
-    }*/
 }
