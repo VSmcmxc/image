@@ -1,6 +1,8 @@
 package com.example.image;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,8 @@ import java.nio.file.Files;
 @RestController
 public class UserController {
 
+    @Autowired
+    ResourceLoader resourceloader;
 
     @GetMapping("/image")
     public ResponseEntity<byte[]> getCurrentAvatar() throws IOException {
@@ -31,9 +35,9 @@ public class UserController {
                 .body(Files.readAllBytes(avatar.toPath()));
     }
 
-    public File getAnonymousUserAvatar() {
+    public File getAnonymousUserAvatar() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-        URL resource = classLoader.getResource("anonymous.jpg");
-        return new File(resource.getFile());
+
+        return resourceloader.getResource("anonymous.jpg").getFile();
     }
 }
