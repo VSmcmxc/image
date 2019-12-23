@@ -52,7 +52,7 @@ public class UserController {
                 .body(Files.readAllBytes(avatar.toPath()));*/
         InputStream in = resource.getInputStream();
         return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.parseMediaType("image/jpg"))
+                .contentType(MediaType.IMAGE_JPEG)
                 .body(IOUtils.toByteArray(in));
     }
 
